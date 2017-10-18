@@ -2,7 +2,7 @@
  *				HTBLA-Leonding / Class: 2AHIF
  * ---------------------------------------------------------
  * Title:			Pyramid of Numbers
- * Author:			Panturu Gloria Sara
+ * Author:		Panturu Gloria Sara
  * ---------------------------------------------------------- */
 #include <stdio.h>
 #include <string.h>
@@ -12,7 +12,6 @@ struct BigInt
   int digits_count;
   unsigned int the_int[MAX_DIGITS];
 };
-
 int strtobig_int (const char* string, int length, struct BigInt* big_int);
 void print_big_int(const struct BigInt* big_int);
 void multiply( const struct BigInt * big_int, int factor, struct BigInt * big_result);
@@ -30,9 +29,9 @@ int main(int argc, char* argv[])
   struct BigInt big_int;
   struct BigInt big_result;
   big_int.digits_count = strtobig_int(input, length, &big_int);
-
   big_result.digits_count =big_int.digits_count;
   int count = 2;
+
   while (count <= 9) {
     print_big_int(&big_int);
     printf(" * %d = ", count);
@@ -59,7 +58,7 @@ int main(int argc, char* argv[])
 void print_big_int (const struct BigInt *big_int)
 {
   for (int i = big_int->digits_count-1; i >=0 ; i--) {
-    printf("%d",big_int->the_int[i]); //Warum geht [i-1]nicht, wenn i=big_int->digits_count-1?
+    printf("%d",big_int->the_int[i]); //Warum geht [i-1]nicht, wenn i=big_int->digits_count?
   }
 }
 int strtobig_int(const char *string, int length, struct BigInt *big_int)
@@ -89,7 +88,7 @@ void multiply( const struct BigInt * big_int, int factor, struct BigInt * big_re
    carry = product/10;
    big_result->the_int[i] = product % 10;
 }
-  if (carry >0) {
+  if (carry >0 ) {
     big_result->digits_count++;
     int index = big_result->digits_count-1;
     big_result->the_int[index] = carry;
@@ -100,21 +99,19 @@ void divide(const struct BigInt * big_int, int divisor, struct BigInt *  big_res
 {
   int quotient= 0;
   int rest = 0;
-  char number_to_divide;
- for (int i = big_int->digits_count; i >0; i--)
+  int digits_sum= 0;
+  int count_zeros = 0;
+ for (int i = big_int->digits_count-1; i >=0; i--)
  {
-   number_to_divide = big_int->the_int[i];
-
-   while ((int)number_to_divide < divisor && i == big_int->digits_count) {
-     number_to_divide += big_int->the_int[i];
-}
-   if (i != big_int->digits_count ){
-     rest = rest + (char)big_int->the_int[i];
+   quotient=big_int->the_int[i] + (rest*10);
+   big_result->the_int[i] = quotient/divisor;
+   rest= quotient %divisor;
+   digits_sum+= big_result->the_int[i];
+   if ( big_result->the_int[i] == 0 && digits_sum == 0) {
+     count_zeros++;
    }
-   quotient = (int)number_to_divide / divisor;
-   big_result ->the_int[i] = quotient;
-   rest = (int)number_to_divide % divisor;
   }
+  big_result->digits_count -= count_zeros;
 }
 
 void copy_big_int(const struct BigInt * from, struct BigInt * to)
